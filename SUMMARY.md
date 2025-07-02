@@ -1,6 +1,5 @@
 # Table of contents
 
-* [AdUnblock Documentation](README.md)
 * [Introduction](introduction.md)
 * [Get Started](get-started.md)
 * [Guides](guides/README.md)

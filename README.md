@@ -1,3 +1,0 @@
-# AdUnblock Documentation
-
-Test
