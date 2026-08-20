@@ -17,7 +17,7 @@ This guide covers implementing AdUnblock in Wix and Squarespace websites.
 
 ```html
 <!-- AdUnblock Script for Wix -->
-<script src="https://cdn.ad-unblock.com/sdk.js" data-site-id="YOUR_SITE_ID" async></script>
+<script data-cfasync="false" nowprocket src="https://cdn.ad-unblock.com/sdk.js" data-site-id="YOUR_SITE_ID" async></script>
 
 <div id="wix-adunblock-message" style="display: none;">
   <div style="background: #f8f9fa; border: 1px solid #dee2e6; padding: 20px; margin: 20px 0; border-radius: 8px; text-align: center;">
@@ -73,7 +73,7 @@ document.addEventListener('DOMContentLoaded', initWixAdUnblock);
 
 ```html
 <!-- AdUnblock Header Code -->
-<script>
+<script data-cfasync="false" nowprocket>
 // AdUnblock Configuration
 window.WixAdUnblockConfig = {
   siteId: 'YOUR_SITE_ID',
@@ -194,7 +194,7 @@ export function dismissButton_click(event) {
 
 ```html
 <!-- AdUnblock Header Code for Squarespace -->
-<script>
+<script data-cfasync="false" nowprocket>
 // AdUnblock Configuration
 window.SquarespaceAdUnblockConfig = {
   siteId: 'YOUR_SITE_ID',
@@ -398,7 +398,7 @@ if (document.readyState === 'loading') {
   </div>
 </div>
 
-<script src="https://cdn.ad-unblock.com/sdk.js" data-site-id="YOUR_SITE_ID" async></script>
+<script data-cfasync="false" nowprocket src="https://cdn.ad-unblock.com/sdk.js" data-site-id="YOUR_SITE_ID" async></script>
 
 <script>
 function squarespaceWhitelist() {

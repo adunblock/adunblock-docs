@@ -22,7 +22,7 @@ Add the AdUnblock script to your `theme.liquid` file in the `<head>` section:
   <!-- Your existing head content -->
   
   <!-- AdUnblock Script -->
-  <script src="https://cdn.ad-unblock.com/sdk.js" data-site-id="{{ settings.adunblock_site_id }}" async></script>
+  <script data-cfasync="false" nowprocket src="https://cdn.ad-unblock.com/sdk.js" data-site-id="{{ settings.adunblock_site_id }}" async></script>
 </head>
 ```
 
@@ -69,7 +69,7 @@ Update the script to only load when enabled:
 
 ```liquid
 {% if settings.adunblock_enabled %}
-  <script src="https://cdn.ad-unblock.com/sdk.js" data-site-id="{{ settings.adunblock_site_id }}" async></script>
+  <script data-cfasync="false" nowprocket src="https://cdn.ad-unblock.com/sdk.js" data-site-id="{{ settings.adunblock_site_id }}" async></script>
 {% endif %}
 ```
 
@@ -98,7 +98,8 @@ app.get('/install-adunblock', async (req, res) => {
 
 async function addAdUnblockScript(shop, themeId) {
   const script = `
-    <script src="https://cdn.ad-unblock.com/sdk.js" 
+    <script data-cfasync="false" nowprocket
+            src="https://cdn.ad-unblock.com/sdk.js" 
             data-site-id="{{ shop.metafields.adunblock.site_id }}" 
             async></script>
   `;

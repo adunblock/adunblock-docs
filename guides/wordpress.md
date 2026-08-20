@@ -55,7 +55,7 @@ Add to your theme's `functions.php` file:
 ```php
 function add_adunblock_script() {
     ?>
-    <script src="https://cdn.ad-unblock.com/sdk.js" data-site-id="YOUR_SITE_ID"></script>
+    <script data-cfasync="false" nowprocket src="https://cdn.ad-unblock.com/sdk.js" data-site-id="YOUR_SITE_ID"></script>
     <?php
 }
 add_action('wp_head', 'add_adunblock_script');
@@ -79,6 +79,17 @@ function enqueue_adunblock_script() {
     wp_script_add_data('adunblock-sdk', 'data-site-id', 'YOUR_SITE_ID');
 }
 add_action('wp_enqueue_scripts', 'enqueue_adunblock_script');
+
+// wp_enqueue_script() can't print a valueless attribute, so add the
+// optimizer opt-outs to the printed tag.
+function adunblock_script_attributes($tag, $handle) {
+    if ($handle !== 'adunblock-sdk') {
+        return $tag;
+    }
+
+    return str_replace('<script ', '<script data-cfasync="false" nowprocket ', $tag);
+}
+add_filter('script_loader_tag', 'adunblock_script_attributes', 10, 2);
 ```
 
 #### Option C: Direct Theme Integration
@@ -86,7 +97,7 @@ add_action('wp_enqueue_scripts', 'enqueue_adunblock_script');
 Add directly to your theme's `header.php` file:
 
 ```php
-<script src="https://cdn.ad-unblock.com/sdk.js" data-site-id="YOUR_SITE_ID"></script>
+<script data-cfasync="false" nowprocket src="https://cdn.ad-unblock.com/sdk.js" data-site-id="YOUR_SITE_ID"></script>
 ```
 
 ### Custom Implementation with PHP
@@ -349,6 +360,39 @@ AdUnblock works with:
 - **WP Super Cache**
 - **LiteSpeed Cache**
 - **Cloudflare**
+
+### Optimization Plugins
+
+Every AdUnblock snippet carries `data-cfasync="false"` and `nowprocket`. Keep
+both, and keep them **before** `src` — Cloudflare ignores `data-cfasync` if it
+comes later in the tag. Without them the tag gets deferred, combined or
+rewritten, and AdUnblock then loads after the page's ad requests have already
+gone out.
+
+What each attribute covers:
+
+| Attribute | Excludes the tag from |
+|-----------|-----------------------|
+| `data-cfasync="false"` | Cloudflare Rocket Loader |
+| `nowprocket` | WP Rocket — Delay JavaScript Execution |
+| `data-no-minify="1"` | WP Rocket — Minify/Combine JavaScript |
+| `data-no-optimize="1"` | LiteSpeed Cache — JS optimize, defer and delay |
+| `data-noptimize` | Autoptimize |
+
+**WP Rocket's *Load JavaScript deferred* has no attribute.** If you enable it,
+add the tag to **Excluded JavaScript Files** in that section, or use the
+`rocket_exclude_defer_js` filter:
+
+```php
+add_filter( 'rocket_exclude_defer_js', function ( $excluded ) {
+    $excluded[] = 'cdn.ad-unblock.com';
+    return $excluded;
+} );
+```
+
+W3 Total Cache, SG Optimizer and Perfmatters have no equivalent attribute
+either — add `cdn.ad-unblock.com` to their JS exclusion lists, covering
+combining, deferring and delayed JavaScript.
 
 ### Cache Configuration
 

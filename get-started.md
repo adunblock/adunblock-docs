@@ -30,8 +30,15 @@ Add the AdUnblock tracking code to your website. The installation method depends
 
 #### For HTML/JavaScript websites:
 ```html
-<script src="https://cdn.ad-unblock.com/sdk.js" data-site-id="YOUR_SITE_ID"></script>
+<script data-cfasync="false" nowprocket src="https://cdn.ad-unblock.com/sdk.js" data-site-id="YOUR_SITE_ID"></script>
 ```
+
+`data-cfasync="false"` and `nowprocket` keep Cloudflare Rocket Loader and WP
+Rocket's Delay JavaScript Execution from deferring or rewriting the tag —
+AdUnblock has to load before your ad code. Keep both **before** `src`:
+Cloudflare ignores `data-cfasync` if it comes after the `src` attribute. If you
+run another performance plugin, exclude the tag from combining, deferring and
+delayed JavaScript there too.
 
 #### For WordPress:
 Install our WordPress plugin or add the code to your theme.

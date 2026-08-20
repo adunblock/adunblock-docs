@@ -389,6 +389,8 @@ class MyDocument extends Document {
       <Html>
         <Head>
           <script 
+            data-cfasync="false"
+            nowprocket=""
             src="https://cdn.ad-unblock.com/sdk.js" 
             data-site-id={process.env.NEXT_PUBLIC_ADUNBLOCK_SITE_ID}
             async

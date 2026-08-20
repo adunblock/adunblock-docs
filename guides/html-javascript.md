@@ -17,7 +17,7 @@ Add the AdUnblock script to your HTML pages, preferably in the `<head>` section:
     <title>Your Website</title>
     
     <!-- AdUnblock SDK -->
-    <script src="https://cdn.ad-unblock.com/sdk.js" data-site-id="YOUR_SITE_ID"></script>
+    <script data-cfasync="false" nowprocket src="https://cdn.ad-unblock.com/sdk.js" data-site-id="YOUR_SITE_ID"></script>
 </head>
 <body>
     <!-- Your website content -->
@@ -25,12 +25,29 @@ Add the AdUnblock script to your HTML pages, preferably in the `<head>` section:
 </html>
 ```
 
+`data-cfasync="false"` and `nowprocket` opt the tag out of Cloudflare Rocket
+Loader and WP Rocket's Delay JavaScript Execution, which would otherwise defer
+or rewrite it. AdUnblock has to run first and unmodified — once the page's ad
+requests are on their way it is too late.
+
+Two rules when you copy the tag:
+
+- **Keep `data-cfasync="false"` before `src`.** Cloudflare only honours the
+  attribute when it appears ahead of `src`, and it has to be in the HTML your
+  server sends — setting it from JavaScript does nothing.
+- **`nowprocket` covers Delay JavaScript Execution only.** WP Rocket has no
+  attribute for *Load JavaScript deferred*; if you use that option, add the tag
+  to its **Excluded JavaScript Files** list.
+
+Other optimizers have their own exclusions — see the WordPress guide for the
+plugin-specific attributes.
+
 ### Step 2: Replace YOUR_SITE_ID
 
 Replace `YOUR_SITE_ID` with your actual site ID from the AdUnblock dashboard:
 
 ```html
-<script src="https://cdn.ad-unblock.com/sdk.js" data-site-id="abc123def456"></script>
+<script data-cfasync="false" nowprocket src="https://cdn.ad-unblock.com/sdk.js" data-site-id="abc123def456"></script>
 ```
 
 ## Advanced Configuration
@@ -40,7 +57,7 @@ Replace `YOUR_SITE_ID` with your actual site ID from the AdUnblock dashboard:
 For better performance, load AdUnblock asynchronously:
 
 ```html
-<script>
+<script data-cfasync="false" nowprocket>
 (function() {
     const script = document.createElement('script');
     script.src = 'https://cdn.ad-unblock.com/sdk.js';
@@ -57,6 +74,8 @@ Configure AdUnblock behavior with additional data attributes:
 
 ```html
 <script 
+    data-cfasync="false"
+    nowprocket
     src="https://cdn.ad-unblock.com/sdk.js" 
     data-site-id="YOUR_SITE_ID"
     data-auto-detect="true"
@@ -412,6 +431,8 @@ Enable debug mode for testing:
 
 ```html
 <script 
+    data-cfasync="false"
+    nowprocket
     src="https://cdn.ad-unblock.com/sdk.js" 
     data-site-id="YOUR_SITE_ID"
     data-debug="true">
