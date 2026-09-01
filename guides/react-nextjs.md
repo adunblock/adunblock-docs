@@ -469,6 +469,13 @@ NEXT_PUBLIC_ADUNBLOCK_SITE_ID=your_site_id_here
 
 ### SSR Considerations
 
+If your Next.js app renders on the server, prefer resolving the script URL there
+and printing the tag in the document head — sending the request's own host as
+`?domain=` so your site can be rotated onto a fresh script host on its own when
+a filter rule targets it. See
+[Server-Side Integration](server-side.md#nextjs-app-router) for the App Router
+layout snippet.
+
 #### Server-Side Safe Component
 
 ```jsx

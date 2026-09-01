@@ -233,6 +233,23 @@ Yes, AdUnblock works great with:
 - Gridsome
 - Any static site generator
 
+### Why should my server-side integration send `?domain=`?
+
+Because it is what lets us move your site — and only your site — off a blocked
+script host.
+
+Many filter rules are scoped to the publishers they were reported for
+(`$domain=yoursite.com`), so they block a host on those sites alone. A request
+that carries your domain can be answered with a script URL published for your
+site specifically. A request without one can only ever be answered with the URL
+every publisher shares, which for a rule scoped to you is the blocked host —
+and escaping it then means rotating every site on that host.
+
+The parameter is backwards compatible: omit it, or send a domain we have no
+override for, and you get the same list you always got. Add it to your
+integration now so it is already in place if a rule ever names your site. See
+[Server-Side Integration](guides/server-side.md).
+
 ## Troubleshooting
 
 ### AdUnblock isn't detecting ad blockers

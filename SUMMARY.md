@@ -5,6 +5,7 @@
 * [Guides](guides/README.md)
   * [Test With Chrome Extension](guides/test-with-chrome-extension.md)
   * [HTML/JavaScript](guides/html-javascript.md)
+  * [Server-Side Integration](guides/server-side.md)
   * [WordPress](guides/wordpress.md)
   * [React/Next.js](guides/react-nextjs.md)
   * [Vue/Nuxt.js](guides/vue-nuxtjs.md)

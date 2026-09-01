@@ -28,6 +28,12 @@ Choose the guide that matches your website or application platform:
 
 - [Shopify](shopify.md) - Integration with Shopify stores
 
+### Integration Methods
+
+- [Server-Side Integration](server-side.md) - Resolve the script URL on your
+  server at render time, and send your domain so your site can be moved on its
+  own when a filter rule targets it
+
 ## Implementation Best Practices
 
 ### General Guidelines
@@ -60,6 +66,19 @@ if (shouldLoadAdUnblock()) {
     // Load AdUnblock SDK
 }
 ```
+
+#### Server-Side Source Resolution
+If your pages are rendered by a server, resolve the script URL at render time
+instead of hardcoding it — and send the site's own domain with the request:
+
+```
+https://public.adunblocker.com/api/vendor_scripts?domain=example.com
+```
+
+Host rotations then reach your site without a code change, and the domain lets
+us move your site alone onto a fresh host when a filter rule names it, instead
+of rotating every publisher who shares that host. See
+[Server-Side Integration](server-side.md).
 
 ### Performance Considerations
 

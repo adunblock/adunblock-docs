@@ -46,6 +46,18 @@ Install our WordPress plugin or add the code to your theme.
 #### For React/Next.js, Vue/Nuxt.js, Angular:
 Use our framework-specific integration guides.
 
+#### For server-rendered sites (PHP, WordPress, Node.js, Next.js):
+Resolve the script URL on your server at render time instead of hardcoding it,
+and send the site's own domain with the request:
+
+```
+https://public.adunblocker.com/api/vendor_scripts?domain=example.com
+```
+
+Host rotations then reach your site without a code change, and the domain lets
+us move your site alone onto a fresh host if a filter rule ever targets it. See
+[Server-Side Integration](guides/server-side.md).
+
 ### 4. Test Your Implementation
 
 1. Install an ad blocker (like uBlock Origin) in your browser
@@ -70,6 +82,7 @@ Use our framework-specific integration guides.
 For detailed implementation instructions for your specific platform, check out our platform guides:
 
 - [HTML/JavaScript](guides/html-javascript.md)
+- [Server-Side Integration](guides/server-side.md)
 - [WordPress](guides/wordpress.md) 
 - [React/Next.js](guides/react-nextjs.md)
 - [Vue/Nuxt.js](guides/vue-nuxtjs.md)

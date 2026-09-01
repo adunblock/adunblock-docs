@@ -100,6 +100,48 @@ Add directly to your theme's `header.php` file:
 <script data-cfasync="false" nowprocket src="https://cdn.ad-unblock.com/sdk.js" data-site-id="YOUR_SITE_ID"></script>
 ```
 
+#### Option D: Resolve the Script URL Server-Side (Recommended for Manual Installs)
+
+Options A–C hardcode the script URL. When a filter list blocks the host it
+points at, that tag keeps loading a dead URL until someone edits the theme. Ask
+AdUnblock for the current source at render time instead, and send the site's own
+domain with the request:
+
+```php
+<?php
+// functions.php of your CHILD theme — survives theme updates.
+add_action('wp_head', function () {
+    $src = get_transient('adunblock_script_src');
+
+    if ($src === false) {
+        // The domain lets us move THIS site alone if its host is ever blocked.
+        $url = 'https://public.adunblocker.com/api/vendor_scripts?domain='
+             . urlencode(wp_parse_url(home_url(), PHP_URL_HOST));
+        $response = wp_remote_get($url, ['timeout' => 3]);
+        $sources = json_decode(wp_remote_retrieve_body($response), true);
+        $src = $sources[0] ?? '';
+        // Cache the miss too, briefly, so an outage can't put a blocking
+        // request on every pageview.
+        set_transient('adunblock_script_src', $src, $src ? 5 * MINUTE_IN_SECONDS : 30);
+    }
+
+    // No fallback URL: a source we have rotated away from recovers nothing.
+    if ($src === '') {
+        error_log('AdUnblock: no script source available');
+        return;
+    }
+    ?>
+  <script data-cfasync="false" nowprocket
+          src="<?= esc_url($src) ?>" async data-site-id="YOUR_SITE_ID"></script>
+<?php }, 1); // priority 1 → prints before ad scripts
+```
+
+Without `?domain=`, your site can only ever be served the URL every publisher
+shares — so a filter rule scoped to your domain can be escaped only by moving
+everyone. With it, we can move your site alone. The plugin sends it for you; a
+hand-pasted tag does not. Full details in
+[Server-Side Integration](server-side.md).
+
 ### Custom Implementation with PHP
 
 Create a more sophisticated implementation:
