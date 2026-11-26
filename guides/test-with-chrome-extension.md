@@ -1,190 +1,91 @@
 # Test With Chrome Extension
 
-The AdUnblock Chrome Extension is a powerful testing tool that helps you validate your AdUnblock implementation and troubleshoot any issues.
+The AdUnblock DevTool extension shows AdUnblock recovering the ads on your own
+site, in your own browser, before you add the tag to your site. Only your
+browser sees the test: your visitors aren't affected.
 
-## Installing the Chrome Extension
+> **There's nothing to copy or paste.** The extension connects to your
+> AdUnblock account through your dashboard.
 
-1. Visit the [Chrome Web Store](https://chrome.google.com/webstore) and search for "AdUnblock Testing Tool"
-2. Click "Add to Chrome" to install the extension
-3. Pin the extension to your toolbar for easy access
+## 1. Get ready
 
-## Using the Extension
+- An AdUnblock account. [Sign up free](https://ad-unblock.com/signup) if you
+  don't have one.
+- Chrome with an ad blocker installed and switched on for your site: AdBlock,
+  Adblock Plus, uBlock Origin or AdGuard.
 
-### Basic Testing
+AdUnblock only steps in when it finds an ad blocker. Without one, your ads show
+as they always do, and there is nothing to recover.
 
-1. **Navigate to your website** where AdUnblock is installed
-2. **Click the AdUnblock extension icon** in your browser toolbar
-3. **View the status** - The extension will show:
-   - ✅ AdUnblock detected and working
-   - ❌ AdUnblock not detected
-   - ⚠️ AdUnblock detected but with issues
+## 2. Install the extension
 
-### Detailed Analysis
+1. Open [AdUnblock DevTool](https://chromewebstore.google.com/detail/adunblock-devtool/gnlaoijjmmehcmccdkmbbcmmlpegcpmi)
+   in the Chrome Web Store and click **Add to Chrome**.
+2. Pin it to your toolbar, so its icon is one click away.
 
-The extension provides detailed information about your implementation:
+## 3. Connect your account
 
-#### Detection Status
-- **Site ID**: Confirms your site ID is correctly configured
-- **SDK Version**: Shows which version of the AdUnblock SDK is loaded
-- **Load Time**: Displays how long the SDK took to initialize
+1. Open your website in Chrome and click the **AdUnblock DevTool** icon.
+2. Click **Connect your AdUnblock account**. Your dashboard opens in a new tab;
+   sign in if you need to.
+3. If your site isn't in your account yet, add it there. You don't need to
+   install the tag first.
 
-#### Ad Blocker Simulation
-- **Test Detection**: Simulate different ad blockers to test your setup
-- **Response Testing**: Verify your custom messages and responses work correctly
-- **Event Logging**: See all AdUnblock events in real-time
+The dashboard tab then closes on its own, you're back on your site, and the test
+starts. You only connect once: after that, click the icon on any of your sites
+and choose **Test ad recovery**.
 
-## Testing Scenarios
+## 4. Read the result
 
-### 1. Basic Detection Test
+The page reloads with AdUnblock on, and the extension checks three things:
 
-**Steps:**
-1. Install a popular ad blocker (uBlock Origin, AdBlock Plus, etc.)
-2. Visit your website
-3. Check the extension status
-4. Verify detection is working
+- ✅ **Recovery allowed**: your account can recover ads on this site
+- ✅ **Ad blocker found**: your ad blocker is on for this site
+- ✅ **Ads showing**: how many ads are on the page despite your ad blocker
 
-**Expected Result:** Extension shows "Ad blocker detected" status
+The number of ads also shows on the extension's icon. When all three pass,
+install the tag from your dashboard's setup guide to recover ads for every
+visitor.
 
-### 2. Multi-Browser Testing
+> **Test impressions.** Before your tag is installed, test page views use your
+> account's impressions, like any other recovered impression. The free plan
+> includes 10,000 impressions a month.
 
-Test across different browsers and ad blockers:
+## If a check fails
 
-**Chrome:**
-- uBlock Origin
-- AdBlock Plus  
-- AdGuard
+| What the extension says | What to do |
+| --- | --- |
+| Your site isn't in this account | Add the site in your dashboard under **Manage Sites**, then click **Test again**. With more than one AdUnblock account, check that the extension uses the one that has this site. |
+| Recovery is switched off for this site | Switch it on in **Manage Sites**, then test again. |
+| Your account has used all its impressions | Upgrade your plan from your dashboard, then test again. |
+| No ad blocker found | Turn your ad blocker on for this site. A site you have allowlisted in your ad blocker counts as off. |
+| No ads showing yet | Some sites load their ads as you scroll. Scroll down the page, then click **Count ads again**. Still none? Write to us with your site's address. |
 
-**Firefox:**
-- uBlock Origin
-- AdBlock Plus
-- Ghostery
+## Testing a client's site
 
-**Safari:**
-- AdGuard for Safari
-- 1Blocker
+Agencies can test a site in a client's account without connecting: click
+**Enter an account ID instead** and type the client's 8-digit Account ID, shown
+at the top of their AdUnblock dashboard.
 
-### 3. Mobile Testing
+## Good to know
 
-Use Chrome DevTools device simulation:
-1. Open Chrome DevTools (F12)
-2. Click the device toolbar icon
-3. Select a mobile device
-4. Test your implementation
+- The extension adds AdUnblock after your page starts loading, while an
+  installed tag loads with the page. On sites with complex ad setups, results
+  can differ a little from what your installed tag will do.
+- The extension keeps only your Account ID and your sites' domains, in Chrome;
+  your AdUnblock dashboard passes them to it. It works on a page only when you
+  click its icon there. See the
+  [privacy policy](https://ad-unblock.com/privacy/chrome-ext).
 
-## Troubleshooting Common Issues
+## Need help?
 
-### Extension Shows "Not Detected"
+If anything doesn't work as described, contact our support team at
+[support@ad-unblock.com](mailto:support@ad-unblock.com).
 
-**Possible Causes:**
-- AdUnblock SDK not loaded
-- Incorrect site ID
-- Script blocked by Content Security Policy
+## Next steps
 
-**Solutions:**
-1. Verify the SDK script tag is present
-2. Check your site ID in the dashboard
-3. Review browser console for errors
-4. Check CSP headers allow the AdUnblock domain
-
-### Extension Shows "Issues Detected"
-
-**Common Issues:**
-- Outdated SDK version
-- Configuration errors
-- Network connectivity problems
-
-**Debugging Steps:**
-1. Check the browser console for error messages
-2. Verify your internet connection
-3. Try refreshing the page
-4. Clear browser cache and cookies
-
-### False Positives/Negatives
-
-**False Positive (detects when no ad blocker is present):**
-- Check for conflicting scripts
-- Verify SDK configuration
-- Review custom detection logic
-
-**False Negative (doesn't detect existing ad blocker):**
-- Update to latest SDK version
-- Check ad blocker settings
-- Verify detection method configuration
-
-## Advanced Testing Features
-
-### Event Monitoring
-
-The extension can monitor all AdUnblock events:
-
-```javascript
-// Events you can monitor
-window.AdUnblock.events = {
-    'detected': function(data) { /* Ad blocker detected */ },
-    'not_detected': function(data) { /* No ad blocker found */ },
-    'error': function(data) { /* Error occurred */ }
-};
-```
-
-### Performance Testing
-
-Monitor performance impact:
-- **Load Time**: Time to initialize AdUnblock
-- **Memory Usage**: RAM consumption
-- **Network Requests**: API calls made
-
-### Custom Scenarios
-
-Create custom test scenarios:
-1. **A/B Testing**: Test different configurations
-2. **Geolocation**: Test from different locations
-3. **Device Types**: Test on various devices
-
-## Validation Checklist
-
-Use this checklist to ensure complete testing:
-
-- [ ] Extension shows "Working" status
-- [ ] Ad blocker detection works correctly
-- [ ] Custom messages display properly
-- [ ] No JavaScript errors in console
-- [ ] Page load performance is acceptable
-- [ ] Mobile devices work correctly
-- [ ] Multiple ad blockers tested
-- [ ] Analytics tracking is working
-
-## Reporting Issues
-
-If you discover issues during testing:
-
-1. **Take screenshots** of the extension status
-2. **Copy error messages** from the browser console
-3. **Note your browser version** and operating system
-4. **Document reproduction steps**
-5. **Contact support** with all details
-
-## Best Practices
-
-### Regular Testing
-- Test after any website changes
-- Test monthly to catch issues early
-- Test across different devices and browsers
-
-### Documentation
-- Keep a testing log
-- Document known issues and solutions
-- Share results with your team
-
-### Automation
-Consider automating tests for:
-- Continuous integration pipelines
-- Regular monitoring
-- Performance regression testing
-
-## Next Steps
-
-Once your testing is complete:
-1. Review the [Analytics Dashboard](https://ad-unblock.com/dashboard) for real-world data
-2. Fine-tune your configuration based on test results
-3. Set up monitoring for ongoing validation
-4. Explore advanced features in our [API Reference](../api-reference/rest-api.md) 
+- [HTML/JavaScript integration](html-javascript.md): install the AdUnblock tag
+  on any website
+- [WordPress integration](wordpress.md): use our WordPress plugin for easy setup
+- [Server-side integration](server-side.md): resolve the script URL on your
+  server, so host rotations reach your site without a code change
